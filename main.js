@@ -11,7 +11,7 @@ async function process(ns, targetIp, visited) {
     visited.push(targetIp);
     const children = ns.scan(targetIp, false);
     for (let pos = 0; pos < children.length; pos++) {
-        if (visited.indexOf(children[pos]) === -1 && breakIn(ns, children[pos])) {
+        if (visited.indexOf(children[pos]) === -1 && await breakIn(ns, children[pos])) {
             await enter(ns, children[pos], visited);
         }
     }
