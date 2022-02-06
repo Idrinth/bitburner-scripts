@@ -8,15 +8,19 @@ export async function main(ns) {
     while (power <= 20) {
         for (let i=0; i < max; i++) {
             const ram = Math.pow(2, power);
-            if (ns.serverExists('butler'+i) && ram <= ns.getServerMaxRam('butler'+i)) {
+            if (ns.serverExists('butler-'+i) && ram <= ns.getServerMaxRam('butler-'+i)) {
+                if (!ns.scriptRunning('hack.js')) {
+                    ns.exec('start.js', 'butler-' + i, 1);
+                }
                 continue;
             }
             var cost = ns.getPurchasedServerCost(ram);
             while (cost > ns.getServerMoneyAvailable('home')) {
                 await ns.sleep(1000);
             }
-            if (ns.serverExists('butler'+i)) {
-                ns.deleteServer('butler'+i);
+            if (ns.serverExists('butler-'+i)) {
+                ns.killall('butler-' + i);
+                ns.deleteServer('butler-'+i);
             }
             if (ns.purchaseServer('butler-' + i, ram)) {
                 ns.toast('Buying new butler-' + i);
