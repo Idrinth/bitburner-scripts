@@ -17,18 +17,20 @@ export async function main(ns) {
             }
             if (ns.serverExists('butler'+i)) {
                 ns.deleteServer('butler'+i);
-                ns.toast('Upgrading butler-' + i);
-            } else {
+            }
+            if (ns.purchaseServer('butler-' + i, ram)) {
                 ns.toast('Buying new butler-' + i);
+                const js = ns.ls('home', '.js');
+                for (var pos = js.length - 1; pos >= 0; pos--) {
+                    await ns.scp(js[pos], 'home', 'butler-' + i);
+                }
+                ns.exec('start.js', 'butler-' + i, 1);
+            } else {
+                i--;
             }
-            ns.purchaseServer('butler-' + i, ram);
-            const js = ns.ls('home', '.js');
-            for (var pos = js.length - 1; pos >= 0; pos--) {
-                await ns.scp(js[pos], 'home', 'butler-' + i);
-            }
-            ns.exec('start.js', 'butler-' + i, 1);
-            i = ns.getPurchasedServers().length
+            await ns.sleep(1000);
         }
+        await ns.sleep(1000);
         power++;
     }
 }
