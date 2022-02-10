@@ -9,7 +9,7 @@ export async function main(ns) {
         for (let i=0; i < max; i++) {
             const ram = Math.pow(2, power);
             if (ns.serverExists('butler-'+i) && ram <= ns.getServerMaxRam('butler-'+i)) {
-                if (!ns.scriptRunning('hack.js')) {
+                if (!ns.scriptRunning('hack.js', 'butler-'+i)) {
                     ns.exec('start.js', 'butler-' + i, 1);
                 }
                 continue;
